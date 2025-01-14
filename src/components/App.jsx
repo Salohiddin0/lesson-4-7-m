@@ -1,7 +1,9 @@
 import { useEffect, useReducer } from 'react'
-import StateScreen from './StateScreen'
 import Error from './Error'
-
+import StartScreen from './StartScreen'
+import MainContent from './MainContent'
+import Header from './Header'
+import '../index (2).css'
 
 const initialState = {
   questions: [],
@@ -14,22 +16,40 @@ const reducer = (state, action) => {
       return { ...state, questions: action.payload, status: 'ready' }
     case 'error':
       return { ...state, status: 'error' }
+    default:
+      return state
   }
 }
 
 function App () {
   const [{ questions, status }, dispatch] = useReducer(reducer, initialState)
 
+  const numOfQuestions = questions?.length
+
   useEffect(() => {
     fetch('http://localhost:8000/questions')
       .then(data => data.json())
-      .then(res => dispatch({ type: 'receive', payload: res }))
-      .then(err => dispatch({ type: 'error' }))
+      .then(res => {
+        console.log(res) // Ma'lumotni tekshirish
+        dispatch({ type: 'receive', payload: res })
+      })
+      .catch(err => {
+        console.error(err) // Xatoni tekshirish
+        dispatch({ type: 'error' })
+      })
   }, [])
+
   return (
     <>
-      {status === 'ready' && <StateScreen />}
-      {status === 'error' && <Error />}
+      <div className='app'>
+        <Header />
+        <MainContent>
+          {status === 'ready' && (
+            <StartScreen numOfQuestions={numOfQuestions} />
+          )}
+          {status === 'error' && <Error />}
+        </MainContent>
+      </div>
     </>
   )
 }
