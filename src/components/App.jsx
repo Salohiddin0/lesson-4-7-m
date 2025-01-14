@@ -5,6 +5,7 @@ import MainContent from './MainContent'
 import Header from './Header'
 import '../index (2).css'
 import Questions from './Questions'
+import Footer from './Footer'
 
 const initialState = {
   index: 0,
@@ -20,6 +21,8 @@ const reducer = (state, action) => {
       return { ...state, status: 'error' }
     case 'start':
       return { ...state, status: 'active' }
+    case 'nextQuestion':
+      return { ...state, index: state.index + 1 }
     default:
       throw new Error('Something went wrong')
   }
@@ -55,7 +58,16 @@ function App () {
             <StartScreen numOfQuestions={numOfQuestions} dispatch={dispatch} />
           )}
           {status === 'error' && <Error />}
-          {status === 'active' && <Questions question={questions[index]} />}
+          {status === 'active' && (
+            <>
+              <Questions question={questions[index]} />
+              <Footer
+                dispatch={dispatch}
+                index={index}
+                numOfQuestions={numOfQuestions}
+              />
+            </>
+          )}
         </MainContent>
       </div>
     </>
