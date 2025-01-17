@@ -1,18 +1,14 @@
 import React from 'react'
 import Options from './Options'
 
-const Questions = ({ question }) => {
+const Questions = ({ question, dispatch, answer }) => {
   console.log(question)
 
   return (
     <div>
-      <h3>{question.question}</h3>
+      <h3> Questions {question.question}</h3>
 
-      <ul className='options'>
-        {question.options.map(option => (
-          <Options option={option} />
-        ))}
-      </ul>
+      <Options question={question} dispatch={dispatch} answer={answer} />
     </div>
   )
 }
